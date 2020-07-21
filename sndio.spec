@@ -4,7 +4,7 @@
 #
 Name     : sndio
 Version  : 1.7.0
-Release  : 2
+Release  : 3
 URL      : http://www.sndio.org/sndio-1.7.0.tar.gz
 Source0  : http://www.sndio.org/sndio-1.7.0.tar.gz
 Summary  : small audio and MIDI framework
@@ -57,13 +57,16 @@ man components for the sndio package.
 %prep
 %setup -q -n sndio-1.7.0
 cd %{_builddir}/sndio-1.7.0
+pushd ..
+cp -a sndio-1.7.0 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1595346658
+export SOURCE_DATE_EPOCH=1595346944
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -75,9 +78,22 @@ export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static || ./configure --prefix=/usr --without-libbsd --libdir=/usr/lib64
 make  %{?_smp_mflags}
 
+unset PKG_CONFIG_PATH
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=haswell"
+export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
+export FFLAGS="$FFLAGS -m64 -march=haswell"
+export FCFLAGS="$FCFLAGS -m64 -march=haswell"
+export LDFLAGS="$LDFLAGS -m64 -march=haswell"
+%configure --disable-static || ./configure --prefix=/usr --without-libbsd --libdir=/usr/lib64
+make  %{?_smp_mflags}
+popd
 %install
-export SOURCE_DATE_EPOCH=1595346658
+export SOURCE_DATE_EPOCH=1595346944
 rm -rf %{buildroot}
+pushd ../buildavx2/
+%make_install_avx2
+popd
 %make_install
 
 %files
@@ -86,6 +102,10 @@ rm -rf %{buildroot}
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/aucat
+/usr/bin/haswell/aucat
+/usr/bin/haswell/midicat
+/usr/bin/haswell/sndioctl
+/usr/bin/haswell/sndiod
 /usr/bin/midicat
 /usr/bin/sndioctl
 /usr/bin/sndiod
@@ -93,6 +113,7 @@ rm -rf %{buildroot}
 %files dev
 %defattr(-,root,root,-)
 /usr/include/sndio.h
+/usr/lib64/haswell/libsndio.so
 /usr/lib64/libsndio.so
 /usr/share/man/man3/mio_close.3
 /usr/share/man/man3/mio_eof.3
@@ -131,6 +152,7 @@ rm -rf %{buildroot}
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/haswell/libsndio.so.7.1
 /usr/lib64/libsndio.so.7.1
 
 %files man
