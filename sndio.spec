@@ -4,7 +4,7 @@
 #
 Name     : sndio
 Version  : 1.7.0
-Release  : 3
+Release  : 4
 URL      : http://www.sndio.org/sndio-1.7.0.tar.gz
 Source0  : http://www.sndio.org/sndio-1.7.0.tar.gz
 Summary  : small audio and MIDI framework
