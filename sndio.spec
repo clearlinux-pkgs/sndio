@@ -7,7 +7,7 @@
 #
 Name     : sndio
 Version  : 1.9.0
-Release  : 7
+Release  : 8
 URL      : http://www.sndio.org/sndio-1.9.0.tar.gz
 Source0  : http://www.sndio.org/sndio-1.9.0.tar.gz
 Source1  : http://www.sndio.org/sndio-1.9.0.tar.gz.asc
@@ -15,7 +15,6 @@ Summary  : small audio and MIDI framework
 Group    : Development/Tools
 License  : ISC
 Requires: sndio-bin = %{version}-%{release}
-Requires: sndio-filemap = %{version}-%{release}
 Requires: sndio-lib = %{version}-%{release}
 Requires: sndio-man = %{version}-%{release}
 BuildRequires : alsa-lib-dev
@@ -30,7 +29,6 @@ No detailed description available
 %package bin
 Summary: bin components for the sndio package.
 Group: Binaries
-Requires: sndio-filemap = %{version}-%{release}
 
 %description bin
 bin components for the sndio package.
@@ -48,18 +46,9 @@ Requires: sndio = %{version}-%{release}
 dev components for the sndio package.
 
 
-%package filemap
-Summary: filemap components for the sndio package.
-Group: Default
-
-%description filemap
-filemap components for the sndio package.
-
-
 %package lib
 Summary: lib components for the sndio package.
 Group: Libraries
-Requires: sndio-filemap = %{version}-%{release}
 
 %description lib
 lib components for the sndio package.
@@ -85,15 +74,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1681403933
+export SOURCE_DATE_EPOCH=1683233538
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 %configure --disable-static || ./configure --prefix=/usr --without-libbsd --libdir=/usr/lib64
 make  %{?_smp_mflags}
 
@@ -108,7 +97,7 @@ export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1681403933
+export SOURCE_DATE_EPOCH=1683233538
 rm -rf %{buildroot}
 pushd ../buildavx2/
 %make_install_v3
@@ -121,16 +110,19 @@ popd
 
 %files bin
 %defattr(-,root,root,-)
+/V3/usr/bin/aucat
+/V3/usr/bin/midicat
+/V3/usr/bin/sndioctl
+/V3/usr/bin/sndiod
 /usr/bin/aucat
 /usr/bin/midicat
 /usr/bin/sndioctl
 /usr/bin/sndiod
-/usr/share/clear/optimized-elf/bin*
 
 %files dev
 %defattr(-,root,root,-)
+/V3/usr/lib64/libsndio.so
 /usr/include/sndio.h
-/usr/lib64/glibc-hwcaps/x86-64-v3/libsndio.so
 /usr/lib64/libsndio.so
 /usr/lib64/pkgconfig/sndio.pc
 /usr/share/man/man3/mio_close.3
@@ -168,15 +160,11 @@ popd
 /usr/share/man/man3/sioctl_revents.3
 /usr/share/man/man3/sioctl_setval.3
 
-%files filemap
-%defattr(-,root,root,-)
-/usr/share/clear/filemap/filemap-sndio
-
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/glibc-hwcaps/x86-64-v3/libsndio.so.7
-/usr/lib64/glibc-hwcaps/x86-64-v3/libsndio.so.7.0
-/usr/lib64/glibc-hwcaps/x86-64-v3/libsndio.so.7.2
+/V3/usr/lib64/libsndio.so.7
+/V3/usr/lib64/libsndio.so.7.0
+/V3/usr/lib64/libsndio.so.7.2
 /usr/lib64/libsndio.so.7
 /usr/lib64/libsndio.so.7.0
 /usr/lib64/libsndio.so.7.2
