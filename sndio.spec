@@ -7,7 +7,7 @@
 #
 Name     : sndio
 Version  : 1.9.0
-Release  : 8
+Release  : 9
 URL      : http://www.sndio.org/sndio-1.9.0.tar.gz
 Source0  : http://www.sndio.org/sndio-1.9.0.tar.gz
 Source1  : http://www.sndio.org/sndio-1.9.0.tar.gz.asc
@@ -74,7 +74,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1683233538
+export SOURCE_DATE_EPOCH=1685504699
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -97,7 +97,7 @@ export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
 make  %{?_smp_mflags}
 popd
 %install
-export SOURCE_DATE_EPOCH=1683233538
+export SOURCE_DATE_EPOCH=1685504699
 rm -rf %{buildroot}
 pushd ../buildavx2/
 %make_install_v3
@@ -121,7 +121,6 @@ popd
 
 %files dev
 %defattr(-,root,root,-)
-/V3/usr/lib64/libsndio.so
 /usr/include/sndio.h
 /usr/lib64/libsndio.so
 /usr/lib64/pkgconfig/sndio.pc
@@ -162,8 +161,6 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
-/V3/usr/lib64/libsndio.so.7
-/V3/usr/lib64/libsndio.so.7.0
 /V3/usr/lib64/libsndio.so.7.2
 /usr/lib64/libsndio.so.7
 /usr/lib64/libsndio.so.7.0
